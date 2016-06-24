@@ -48,7 +48,7 @@ function Missile(x, y, direction, isEnemy){
 
     this.collideWithWalls = function(walls){
         for(var i = 0; i < walls.length; i++){
-            this.collideWall(walls[i]);
+            this.collideWithWall(walls[i]);
         }
     };
 
@@ -79,7 +79,7 @@ function Missile(x, y, direction, isEnemy){
             return;
         }
         this.run();
-        p.fillStyle = 'black';
+        p.fillStyle = 'red';
         p.beginPath();
         p.arc(this.x, this.y, this.SIZE, 0, 2*Math.PI);
         p.fill();

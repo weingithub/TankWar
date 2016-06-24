@@ -183,7 +183,7 @@ function Tank(x, y, direction){
         var color = p.fillStyle;
         var a_w = this.SIZE/2;
         if(this.isAttacked){
-            color = 'black';
+            color = 'orange';
             a_w = this.SIZE/3*2;
         }
         switch(this.direction){
