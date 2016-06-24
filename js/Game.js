@@ -1,3 +1,4 @@
+var FPS = 60;
 var GAME_WIDTH = 1000;
 var GAME_HEIGHT = 600;
 var Missiles = new Array();
@@ -10,18 +11,25 @@ window.onload = function(){
 
     var isDebug = false;
 
-    var myTank = new Tank(100, 100, 'up', false);
+    var myTank = new PlayerTank(10, 10, 'up');
 
-    Tanks.push(myTank);
-
-    for(var i = 0; i < 4; i++){
-        Tanks.push(new Tank(200+i*80, 200, 'up', true));
+    for(var i = 0; i < 8; i++){
+        Tanks.push(new EnemyTank(200+i*100, 200, 'up'));
     }
 
+    // generate walls
+    var w = new Wall(100, 200);
+
+    function generateWalls(){
+        var seed = Math.random;
+    };
 
     function reDraw(){
         pen.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
+        w.draw(pen);
+
+        myTank.draw(pen);
         for(var i = 0; i < Missiles.length; i++){
             Missiles[i].draw(pen);
         }
@@ -31,35 +39,42 @@ window.onload = function(){
         for(var i = 0; i < Explosions.length; i++){
             Explosions[i].draw(pen);
         }
-
         if(isDebug){
             pen.fillStyle = 'black';
             pen.font = 'bold 12px Courier New';
             pen.fillText('TankWar(DEBUG) -- by. Cano', 5, 16);
-            pen.fillText('Count Missiles: ' + Missiles.length, 5, 32);
+            pen.fillText('My Tank Position: ' + myTank.x + ', ' + myTank.y, 5, 32);
             pen.fillText('Count Tanks: ' + Tanks.length, 5, 48);
+            pen.fillText('Count Missiles: ' + Missiles.length, 5, 64);
+            pen.fillText('Count Explosions: ' + Explosions.length, 5, 80);
         }
     };
+
     function loop(){
         reDraw();
-
-        for(var i = 0; i < Tanks.length; i++){
-            for(var j = 0; j < Missiles.length; j++){
-                var tankIsAttacked = Missiles[j].attackedTank(Tanks[i]);
-                if(tankIsAttacked){
-                    Tanks[i].isDead = true;
-                    Tanks.splice(i, 1);
-                    Missiles.isDead = true;
-                    Missiles.splice(j);
-                }
-            }
+        // Missiles,
+        for(var i = 0; i < Missiles.length; i++){
+            var m = Missiles[i];
+            m.attackTanks(Tanks);
+            m.attackTank(myTank);
+            m.collideWithWall(w);
         }
+
+        // Tanks.
+        myTank.collideWithWall(w);
+        myTank.collideWithTanks(Tanks);
+        for(var i = 0; i < Tanks.length; i++){
+            var t = Tanks[i];
+            t.collideWithWall(w);
+            t.collideWithTanks(Tanks);
+        }
+       
     }
 
-    setInterval(loop, 25);
+    setInterval(loop, 1000/FPS);
 
     window.onkeydown = function(keyEvent){
-        var key = keyEvent.key;
+        var key = keyEvent.key || keyEvent.keyCode;
         switch(key){
             case '3':
                 if(isDebug){
@@ -73,6 +88,7 @@ window.onload = function(){
     }
 
     window.onkeyup = function(keyEvent){
-        myTank.keyUpEvent(keyEvent.key);
+        var key = keyEvent.key || keyEvent.keyCode;
+        myTank.keyUpEvent(key);
     }
 };

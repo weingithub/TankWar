@@ -1,12 +1,67 @@
-function Tank(x, y, direction, isEnemy){
+function Tank(x, y, direction){
     this.SIZE = 10;
-    this.SPEED = 8;
+    this.SPEED = 5;
     this.x = x;
     this.y = y;
     this.direction = direction;
     this.isRunning = false;
     this.isAttacked = false;
-    this.isEnemy = isEnemy;
+    this.color = 'gray';
+    this.oldPosition = {'x': this.x, 'y': this.y};
+
+    this.collideWithTank = function(tank){
+        if(isCollide(this.getSquare(), tank.getSquare())){
+            this.x = this.oldPosition.x;
+            this.y = this.oldPosition.y;
+        }
+    }
+
+    this.collideWithTanks = function(tanks){
+        for(var i = 0; i < tanks.length; i++){
+            var t = tanks[i];
+            if(t != this){
+                this.collideWithTank(tanks[i]);
+            }
+        }
+    }
+
+    this.collideWithWall = function(wall){
+        if(isCollide(this.getSquare(), wall.getRect())){
+            this.x = this.oldPosition.x;
+            this.y = this.oldPosition.y;
+        }
+    };
+
+    this.collideWithWalls = function(walls){
+        for(var i = 0; i < walls.length; i++){
+            this.collideWithWall(walls[i]);
+        }
+    }
+
+    this.getSquare = function(){
+        var square = {'x': this.x, 'y': this.y, 'width': this.SIZE*4, 'height': this.SIZE*4};
+        if(this.direction == 'left'){
+            square['x'] = this.x + this.SIZE;
+        }else if(this.direction == 'up'){
+            square['y'] = this.y + this.SIZE;
+        }
+        return square;
+    }
+
+    this.getRect = function(){
+        var rect = {'x': this.x, 'y': this.y}
+        if(this.direction == 'left' || this.direction == 'right'){
+            rect['width'] = this.SIZE*5;
+        }else if(this.direction == 'up' || this.direction == 'down'){
+            rect['width'] = this.SIZE*4;
+        }
+        if(this.direction == 'left' || this.direction == 'right'){
+            rect['height'] = this.SIZE*4;
+        }else if(this.direction == 'up' || this.direction == 'down'){
+            rect['height'] = this.SIZE*5;
+        }
+        return rect;
+    }
 
     this.attack = function(){
         if(this.isAttacked){
@@ -23,7 +78,10 @@ function Tank(x, y, direction, isEnemy){
         Missiles.push(m);
     };
 
+    //坦克移动
     this.run = function(){
+        this.oldPosition.x = this.x;
+        this.oldPosition.y = this.y;
         switch(this.direction){
             case 'left':
                 this.x -= this.SPEED;
@@ -50,8 +108,10 @@ function Tank(x, y, direction, isEnemy){
         if(this.y < 0 - this.SIZE){
             this.y = 0 - this.SIZE;
         }
+
     };
 
+    //改变坦克方向
     this.changeDirection = function(direction){
         switch(direction){
             case 'up':
@@ -109,59 +169,17 @@ function Tank(x, y, direction, isEnemy){
         }
     };
 
-    this.keyDownEvent = function(key){
-        switch(key){
-            case 'w':
-                this.changeDirection('up');
-                this.isRunning = true;
-                break;
-            case 'a':
-                this.changeDirection('left');
-                this.isRunning = true;
-                break;
-            case 's':
-                this.changeDirection('down');
-                this.isRunning = true;
-                break;
-            case 'd':
-                this.changeDirection('right');
-                this.isRunning = true;
-                break;
-            case 'j':
-                this.attack();
-                this.isAttacked = true;
-        }
-    };
 
-    this.keyUpEvent = function(key){
-        if(this.direction == 'up' && key == 'w'){
-            this.isRunning = false;
-        }
-        if(this.direction == 'left' && key == 'a'){
-            this.isRunning = false;
-        }
-        if(this.direction == 'down' && key == 's'){
-            this.isRunning = false;
-        }
-        if(this.direction == 'right' && key == 'd'){
-            this.isRunning = false;
-        }
-        if(key == 'j'){
-            this.isAttacked = false;
-        }
-    }
-
+    //绘坦克自身
     this.draw = function(p){
         if(this.isDead){
+            Tanks.splice(Tanks.indexOf(this), 1);
             return;
         }
         if(this.isRunning){
             this.run();
         }
-        p.fillStyle = 'blue';
-        if(this.isEnemy){
-            p.fillStyle = 'gray';
-        }
+        p.fillStyle = this.color;
         var color = p.fillStyle;
         var a_w = this.SIZE/2;
         if(this.isAttacked){
@@ -199,4 +217,4 @@ function Tank(x, y, direction, isEnemy){
                 break;
         }
     };
-}
+};

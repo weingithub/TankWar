@@ -1,32 +1,58 @@
 function Missile(x, y, direction, isEnemy){
     this.SIZE = 3;
-    this.SPEED = 20;
+    this.SPEED = 12;
     this.x = x;
     this.y = y;
     this.direction = direction;
     this.isEnemy = isEnemy;
     this.isDead = false;
 
-    this.attackedTank = function(tank){
+    //获取Missiles自身矩形
+    this.getRect = function(){
+        var rect = {'x': this.x, 'y': this.y, 'width': this.SIZE*2, 'height': this.SIZE*2};
+        return rect;
+    }
+
+    
+    //判断是否击中坦克
+    this.attackTank = function(tank){
+        if(this.isDead){
+            return;
+        }
         var isAttacked = false
         if(this.isEnemy != tank.isEnemy){
-            if(tank.direction == 'left' || tank.direction == 'right'){
-                if(tank.x + tank.SIZE*5 > this.x && tank.x < this.x + this.SIZE*2 && tank.y + tank.SIZE*4 > this.y && tank.y < this.y + this.SIZE*2){
-                    isAttacked = true;
-                }
-            }
-            if(tank.direction == 'up' || tank.direction == 'down'){
-                if(tank.x + tank.SIZE*4 > this.x && tank.x < this.x + this.SIZE*2 && tank.y +tank.SIZE*5 > this.y && tank.y < this.y + this.SIZE*2){
-                    isAttacked = true;
-                }
-            }
+           isAttacked = isCollide(this.getRect(), tank.getSquare());
         }
         if(isAttacked){
+            this.isDead = true;
+            tank.isDead = true;
             Explosions.push(new Explosion(this.x, this.y));
         }
-        return isAttacked;
     };
 
+    this.attackTanks = function(tanks){
+        for(var i = 0; i < tanks.length; i++){
+            this.attackTank(tanks[i]);
+        }
+    };
+
+    this.collideWithWall = function(wall){
+        if(this.isDead){
+            return;
+        }
+        var isCollided = isCollide(this.getRect(), wall.getRect());
+        if(isCollided){
+            this.isDead = true;
+        }
+    };
+
+    this.collideWithWalls = function(walls){
+        for(var i = 0; i < walls.length; i++){
+            this.collideWall(walls[i]);
+        }
+    };
+
+    //子弹移动
     this.run = function(){
         switch(this.direction){
             case 'left':
@@ -43,11 +69,15 @@ function Missile(x, y, direction, isEnemy){
                 break;
         }
         if(this.x > GAME_WIDTH || this.y > GAME_HEIGHT || this.x < 0-this.SIZE*2 || this.y < 0-this.SIZE*2){
-            Missiles.splice(Missiles.indexOf(this));
+            this.isDead = true;
         }
     };
 
     this.draw = function(p){
+        if(this.isDead){
+            Missiles.splice(Missiles.indexOf(this, 1));
+            return;
+        }
         this.run();
         p.fillStyle = 'black';
         p.beginPath();

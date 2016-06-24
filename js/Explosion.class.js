@@ -12,6 +12,7 @@ function Explosion(x, y){
 
     this.draw = function(p){
         if(this.isDead){
+            Explosions.splice(Explosions.indexOf(this), 1);
             return;
         }
 
