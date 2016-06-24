@@ -1,6 +1,6 @@
 function Missile(x, y, direction, isEnemy){
     this.SIZE = 3;
-    this.SPEED = 12;
+    this.SPEED = 4;
     this.x = x;
     this.y = y;
     this.direction = direction;
@@ -71,11 +71,16 @@ function Missile(x, y, direction, isEnemy){
         if(this.x > GAME_WIDTH || this.y > GAME_HEIGHT || this.x < 0-this.SIZE*2 || this.y < 0-this.SIZE*2){
             this.isDead = true;
         }
+
+        //
+        this.collideWithWalls(Walls);
+        this.attackTanks(Tanks);
     };
 
     this.draw = function(p){
+        console.log(this);
         if(this.isDead){
-            Missiles.splice(Missiles.indexOf(this, 1));
+            Missiles.splice(Missiles.indexOf(this), 1);
             return;
         }
         this.run();

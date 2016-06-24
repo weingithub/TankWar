@@ -109,6 +109,8 @@ function Tank(x, y, direction){
             this.y = 0 - this.SIZE;
         }
 
+        this.collideWithWalls(Walls);
+        this.collideWithTanks(Tanks);
     };
 
     //改变坦克方向

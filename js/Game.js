@@ -84,23 +84,6 @@ window.onload = function(){
 
     function loop(){
         reDraw();
-        // Missiles,
-        for(var i = 0; i < Missiles.length; i++){
-            var m = Missiles[i];
-            m.attackTanks(Tanks);
-            m.attackTank(myTank);
-            m.collideWithWalls(Walls);
-        }
-
-        // Tanks.
-        myTank.collideWithWalls(Walls);
-        myTank.collideWithTanks(Tanks);
-        for(var i = 0; i < Tanks.length; i++){
-            var t = Tanks[i];
-            t.collideWithWalls(Walls);
-            t.collideWithTanks(Tanks);
-        }
-       
     }
 
     setInterval(loop, 1000/FPS);
