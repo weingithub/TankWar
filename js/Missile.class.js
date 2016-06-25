@@ -1,6 +1,6 @@
 function Missile(x, y, direction, isEnemy){
     this.SIZE = 3;
-    this.SPEED = 4;
+    this.SPEED = 12;
     this.x = x;
     this.y = y;
     this.direction = direction;
