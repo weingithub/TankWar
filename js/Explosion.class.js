@@ -1,4 +1,4 @@
-function Explosion(x, y, size){
+function Explosion(x, y, size=20){
     this.size = size;
     this.x = x;
     this.y = y;
