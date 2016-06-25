@@ -96,20 +96,11 @@ function Tank(x, y, direction){
                 this.y += this.SPEED;
                 break;
         }
-        if(this.x > GAME_WIDTH - this.SIZE * 4){
-            this.x = GAME_WIDTH - this.SIZE * 4;
-        }
-        if(this.y > GAME_HEIGHT - this.SIZE * 4){
-            this.y = GAME_HEIGHT - this.SIZE * 4;
-        }
-        if(this.x < 0 - this.SIZE){
-            this.x = 0 - this.SIZE;
-        }
-        if(this.y < 0 - this.SIZE){
-            this.y = 0 - this.SIZE;
-        }
 
         this.collideWithWalls(Walls);
+        if(this.isEnemy){
+            this.collideWithTank(myTank);
+        }
         this.collideWithTanks(Tanks);
     };
 
@@ -176,6 +167,7 @@ function Tank(x, y, direction){
     this.draw = function(p){
         if(this.isDead){
             Tanks.splice(Tanks.indexOf(this), 1);
+            score += 10;
             return;
         }
         if(this.isRunning){

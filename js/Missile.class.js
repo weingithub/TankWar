@@ -13,6 +13,7 @@ function Missile(x, y, direction, isEnemy){
         return rect;
     }
 
+
     
     //判断是否击中坦克
     this.attackTank = function(tank){
@@ -68,17 +69,12 @@ function Missile(x, y, direction, isEnemy){
                 this.y += this.SPEED;
                 break;
         }
-        if(this.x > GAME_WIDTH || this.y > GAME_HEIGHT || this.x < 0-this.SIZE*2 || this.y < 0-this.SIZE*2){
-            this.isDead = true;
-        }
-
         //
         this.collideWithWalls(Walls);
         this.attackTanks(Tanks);
     };
 
     this.draw = function(p){
-        console.log(this);
         if(this.isDead){
             Missiles.splice(Missiles.indexOf(this), 1);
             return;

@@ -1,4 +1,3 @@
-
 function PlayerTank(x, y, direction){
     this.x = x;
     this.y = y;

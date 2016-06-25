@@ -1,5 +1,5 @@
-function Explosion(x, y){
-    this.SIZE = 20;
+function Explosion(x, y, size){
+    this.size = size;
     this.x = x;
     this.y = y;
     this.isDead = false;
@@ -7,7 +7,7 @@ function Explosion(x, y){
     this.step = 0;
 
     for(var i = 0; i < 8; i++){
-        this.steps[i] = this.SIZE/8*i;
+        this.steps[i] = this.size/8*i;
     }
 
     this.draw = function(p){

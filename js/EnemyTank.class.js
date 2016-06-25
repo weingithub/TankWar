@@ -1,4 +1,5 @@
 function EnemyTank(x, y, direction){
+    this.SPEED = 4;
     this.x = x;
     this.y = y;
     this.direction = direction;
@@ -6,7 +7,8 @@ function EnemyTank(x, y, direction){
     this.color = 'green'
 
     this.brain = function(){
-        this.y++;
+        this.direction = 'left';
+        this.run();
     };
 }
 EnemyTank.prototype = new Tank();
