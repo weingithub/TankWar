@@ -9,6 +9,7 @@ function Tank(x, y, direction){
     this.color = 'gray';
     this.oldPosition = {'x': this.x, 'y': this.y};
 
+
     this.collideWithTank = function(tank){
         if(isCollide(this.getSquare(), tank.getSquare())){
             this.x = this.oldPosition.x;
@@ -63,6 +64,7 @@ function Tank(x, y, direction){
         return rect;
     }
 
+        
     this.attack = function(){
         if(this.isAttacked){
             return;
@@ -74,7 +76,7 @@ function Tank(x, y, direction){
             var mx = this.x + (this.SIZE*4)/2;
             var my = this.y + (this.SIZE*5)/2;
         }
-        var m = new Missile(mx, my, this.direction, this.isEnemy);
+        var m = new Missile(mx, my, this.direction, this.isEnemy, this);
         Missiles.push(m);
     };
 
@@ -211,4 +213,5 @@ function Tank(x, y, direction){
                 break;
         }
     };
+
 };

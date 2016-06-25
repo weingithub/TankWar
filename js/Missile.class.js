@@ -1,8 +1,9 @@
-function Missile(x, y, direction, isEnemy){
+function Missile(x, y, direction, isEnemy, parent){
     this.SIZE = 3;
     this.SPEED = 12;
     this.x = x;
     this.y = y;
+    this.parent = parent;
     this.direction = direction;
     this.isEnemy = isEnemy;
     this.isDead = false;
@@ -12,8 +13,6 @@ function Missile(x, y, direction, isEnemy){
         var rect = {'x': this.x, 'y': this.y, 'width': this.SIZE*2, 'height': this.SIZE*2};
         return rect;
     }
-
-
     
     //判断是否击中坦克
     this.attackTank = function(tank){
@@ -21,8 +20,11 @@ function Missile(x, y, direction, isEnemy){
             return;
         }
         var isAttacked = false
-        if(this.isEnemy != tank.isEnemy){
-           isAttacked = isCollide(this.getRect(), tank.getSquare());
+        //if(this.isEnemy != tank.isEnemy){
+           //isAttacked = isCollide(this.getRect(), tank.getSquare());
+        //}
+        if(this.parent != tank){
+            isAttacked = isCollide(this.getRect(), tank.getSquare());
         }
         if(isAttacked){
             this.isDead = true;
@@ -72,6 +74,7 @@ function Missile(x, y, direction, isEnemy){
         //
         this.collideWithWalls(Walls);
         this.attackTanks(Tanks);
+        this.attackTank(myTank);
     };
 
     this.draw = function(p){

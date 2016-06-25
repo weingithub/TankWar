@@ -1,4 +1,5 @@
 function PlayerTank(x, y, direction){
+    this.SPEED = 6;
     this.x = x;
     this.y = y;
     this.direction = direction;
